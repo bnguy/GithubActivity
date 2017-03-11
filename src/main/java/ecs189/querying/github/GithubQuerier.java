@@ -47,6 +47,7 @@ public class GithubQuerier {
             sb.append("<div id=event-" + i + " class=\"collapse\" style=\"height: auto;\"> <pre>");
             sb.append(event.toString());
             sb.append("</pre> </div>");
+
         }
         sb.append("</div>");
         return sb.toString();
@@ -59,8 +60,12 @@ public class GithubQuerier {
         JSONObject json = Util.queryAPI(new URL(url));
         System.out.println(json);
         JSONArray events = json.getJSONArray("root");
-        for (int i = 0; i < events.length() && i < 10; i++) {
-            eventList.add(events.getJSONObject(i));
+        for (int i = 0, typeCount = 0; i < events.length() && typeCount < 10; i++) {
+            if ((events.getJSONObject(i)).getString("type").equals("PushEvent")) {
+                typeCount++;
+                eventList.add(events.getJSONObject(i));
+
+            }
         }
         return eventList;
     }
