@@ -65,19 +65,24 @@ public class GithubQuerier {
     }
 
     private static List<JSONObject> getEvents(String user) throws IOException {
+        int typeCount = 0;
+        int pageCount = 1;
         List<JSONObject> eventList = new ArrayList<JSONObject>();
-        String url = BASE_URL + user + "/events";
-        System.out.println(url);
-        JSONObject json = Util.queryAPI(new URL(url));
-        System.out.println(json);
-        JSONArray events = json.getJSONArray("root");
-        for (int i = 0, typeCount = 0; i < events.length() && typeCount < 10; i++) {
-            if ((events.getJSONObject(i)).getString("type").equals("PushEvent")) {
-                typeCount++;
-                eventList.add(events.getJSONObject(i));
 
+        while (typeCount < 10){
+            String url = BASE_URL + user + "/events?page=" + pageCount;
+            System.out.println(url);
+            JSONObject json = Util.queryAPI(new URL(url));
+            System.out.println(json);
+            JSONArray events = json.getJSONArray("root");
+            for (int i = 0; i < events.length() && typeCount < 10; i++) {
+                if ((events.getJSONObject(i)).getString("type").equals("PushEvent")) {
+                    typeCount++;
+                    eventList.add(events.getJSONObject(i));
+                }
             }
         }
+
         return eventList;
     }
 }
