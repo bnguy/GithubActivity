@@ -3,12 +3,12 @@ services:
   web1:
     ports:
      - "8080"
-    image: activity-old
+    image: activity
 
   proxy:
     ports:
      - "8888:8888"
-    image: activity
+    image: ng
 
 
    
